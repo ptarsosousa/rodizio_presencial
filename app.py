@@ -56,7 +56,7 @@ def print_schedule(schedule):
     st.table(count_df)
 
 # Configurações do Streamlit
-st.title("Programação de Rodízio Presencial")
+st.title("Programação de Rodízio Presencial :flag-br:")
 st.write("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:")
 
 col1, col2 = st.columns([0.4,0.6])
@@ -103,11 +103,11 @@ while unit_name:
     if names:
         units[unit_name] = names
         st.write(f"Adicionado {unit_name} e a sua equipe:")
-        st.table(names)
+        st.write(names)
     num_unidade += 1
     unit_name = st.text_input("Outra unidade? (ou deixe em branco para finalizar):", key=f"unit_{num_unidade}")
 
-if st.button("Gerar Escala e correr pro abraço "):
+if st.button("Gerar Escala e correr pro abraço :clap:"):
     if units and num_stations:
         rotation_schedule = create_rotation_schedule(units, num_stations)
         print_schedule(rotation_schedule)
