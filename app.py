@@ -59,7 +59,7 @@ def print_schedule(schedule):
 st.title("Programação de Rodízio Presencial")
 st.write("Orientações:\nTestes")
 
-col1 = st.columns([0.4])
+col1, col2 = st.columns([0.4,0.6])
 with col1:
     num_stations = st.number_input("Informe o número de estações de trabalho disponíveis por dia:", min_value=1, step=1)
 
