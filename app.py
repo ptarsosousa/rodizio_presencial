@@ -63,7 +63,7 @@ num_stations = st.number_input("Informe o número de estações de trabalho disp
 
 units = {}
 
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([0.4,0.2,0.4], vertical_alignment="center")
 
 # Carregar dados a partir de uma planilha Excel
 with col1:
