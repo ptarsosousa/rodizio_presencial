@@ -68,7 +68,7 @@ units = {}
 
 # Carregar dados a partir de uma planilha Excel
 # Entrada manual de unidades e membros
-st.write("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias'.")
+st.write("*Você também pode carregar um arquivo Excel com as colunas 'unidade', 'servidor' e 'dias'.*")
 uploaded_file = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
 if uploaded_file:
     df = pd.read_excel(uploaded_file)
@@ -84,29 +84,30 @@ if uploaded_file:
 col1, col2 = st.columns([0.4,0.6])
 with col1:
     num_unidade = 1
-    unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
+    unit_name = st.text_input("Também pode informar as unidades e as sua equipe (ou deixe em branco para finalizar):")
+    st.write("*Não esquece de dar o ENTER*")
 
 while unit_name:
     col1, col2 = st.columns([0.4,0.6])
     with col1:
-        num_people = st.number_input(f"Informe o número de pessoas na {unit_name}:", min_value=1, step=1, key=unit_name)
+        num_people = st.number_input(f"Quantas pessoas tem a equipe da {unit_name}:", min_value=1, step=1, key=unit_name)
     names = []
     for i in range(num_people):
         col1, col2 = st.columns([3, 1])
         with col1:
-            name = st.text_input(f"Informe o nome da pessoa {i + 1} na {unit_name}:", key=f"{unit_name}_{i}")
+            name = st.text_input(f"Me diga o nome da pessoa {i + 1} na {unit_name}:", key=f"{unit_name}_{i}")
         with col2:
-            days = st.number_input(f"Dias por semana", min_value=1, max_value=5, step=1, key=f"{unit_name}_{i}_days")
+            days = st.number_input(f"Quantos dias da semana o(a) {name} deve trabalhar?", min_value=1, max_value=5, step=1, key=f"{unit_name}_{i}_days")
         if name:
             names.append((name, days))
     if names:
         units[unit_name] = names
-        st.write(f"Adicionado {unit_name} com os membros:")
+        st.write(f"Adicionado {unit_name} e a sua equipe:")
         st.table(names)
     num_unidade += 1
-    unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):", key=f"unit_{num_unidade}")
+    unit_name = st.text_input("Outra unidade? (ou deixe em branco para finalizar):", key=f"unit_{num_unidade}")
 
-if st.button("Gerar Programação"):
+if st.button("Gerar Escala e correr pro abraço "):
     if units and num_stations:
         rotation_schedule = create_rotation_schedule(units, num_stations)
         print_schedule(rotation_schedule)
