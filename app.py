@@ -57,7 +57,7 @@ def print_schedule(schedule):
 
 # Configurações do Streamlit
 st.title("Programação de Rodízio Presencial")
-st.write("Orientações:\nTestes")
+st.write("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:")
 
 col1, col2 = st.columns([0.4,0.6])
 with col1:
