@@ -59,26 +59,33 @@ def print_schedule(schedule):
 st.title("Programação de Rodízio Presencial")
 st.write("Orientações:\nTestes")
 
-num_stations = st.number_input("Informe o número de estações de trabalho disponíveis por dia:", min_value=1, step=1)
+col1 = st.columns([3, 1])
+with col1:
+    num_stations = st.number_input("Informe o número de estações de trabalho disponíveis por dia:", min_value=1, step=1)
 
 units = {}
 
-# Carregar dados a partir de uma planilha Excel
-uploaded_file = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
-if uploaded_file:
-    df = pd.read_excel(uploaded_file)
-    if 'unidade' in df.columns and 'servidor' in df.columns and 'dias' in df.columns:
-        for unit in df['unidade'].unique():
-            unit_people = df[df['unidade'] == unit]
-            units[unit] = [(row['servidor'], row['dias']) for _, row in unit_people.iterrows()]
-        st.write("Unidades e Membros do Excel:")
-        st.write(units)
-    else:
-        st.error("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
+col1, col2, col3 = st.columns([4, 1])
 
+# Carregar dados a partir de uma planilha Excel
+with col1:
+    uploaded_file = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
+    if uploaded_file:
+        df = pd.read_excel(uploaded_file)
+        if 'unidade' in df.columns and 'servidor' in df.columns and 'dias' in df.columns:
+            for unit in df['unidade'].unique():
+                unit_people = df[df['unidade'] == unit]
+                units[unit] = [(row['servidor'], row['dias']) for _, row in unit_people.iterrows()]
+            st.write("Unidades e Membros do Excel:")
+            st.write(units)
+        else:
+            st.error("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
+with col2:
+    st.title('Ou')
+with col3:
 # Entrada manual de unidades e membros
-num_unidade = 1
-unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
+    num_unidade = 1
+    unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
 
 while unit_name:
     num_people = st.number_input(f"Informe o número de pessoas na {unit_name}:", min_value=1, step=1, key=unit_name)
