@@ -81,11 +81,11 @@ if uploaded_file:
     else:
         st.error("ERRO: O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
 
-col1, col2 = st.columns([0.4,0.6])
+col1, col2 = st.columns([0.8,0.2])
 with col1:
     num_unidade = 1
-    unit_name = st.text_input("Também pode informar as unidades e as sua equipe (ou deixe em branco para finalizar):")
-    st.write("*Não esquece de dar o ENTER*")
+    unit_name = st.text_input("Também pode informar as unidades e as sua equipe. Qual o nome da primeira? (ou deixe em branco para finalizar):")
+    st.write("**Não esquece de dar o ENTER**")
 
 while unit_name:
     col1, col2 = st.columns([0.4,0.6])
