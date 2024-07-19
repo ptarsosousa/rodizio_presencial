@@ -69,7 +69,14 @@ col1, col2, col3 = st.columns([0.4,0.2,0.4], vertical_alignment="center")
 
 # Carregar dados a partir de uma planilha Excel
 with col1:
-    uploaded_file = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
+# Entrada manual de unidades e membros
+    num_unidade = 1
+    unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
+with col2:
+    st.title('Ou', )
+with col3:
+    st.write("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias'.")
+    uploaded_file = st.file_uploader("Carregar arquivo Excel (Formato: servidor, unidade, dias)", type=["xlsx"])
     if uploaded_file:
         df = pd.read_excel(uploaded_file)
         if 'unidade' in df.columns and 'servidor' in df.columns and 'dias' in df.columns:
@@ -79,13 +86,7 @@ with col1:
             st.write("Unidades e Membros do Excel:")
             st.write(units)
         else:
-            st.error("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
-with col2:
-    st.title('Ou')
-with col3:
-# Entrada manual de unidades e membros
-    num_unidade = 1
-    unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
+            st.error("ERRO: O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
 
 while unit_name:
     num_people = st.number_input(f"Informe o número de pessoas na {unit_name}:", min_value=1, step=1, key=unit_name)
