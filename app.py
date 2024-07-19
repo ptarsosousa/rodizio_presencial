@@ -103,7 +103,7 @@ while unit_name:
     if names:
         units[unit_name] = names
         st.write(f"Adicionado {unit_name} e a sua equipe:")
-        st.write(names)
+        st.table(names)
     num_unidade += 1
     unit_name = st.text_input("Outra unidade? (ou deixe em branco para finalizar):", key=f"unit_{num_unidade}")
 
