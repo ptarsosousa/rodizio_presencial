@@ -56,7 +56,8 @@ def print_schedule(schedule):
     st.table(count_df)
 
 # Configurações do Streamlit
-st.title("Programação de Rodízio de Unidades Organizacionais")
+st.title("Programação de Rodízio Presencial")
+st.write("Orientações:\nTestes")
 
 num_stations = st.number_input("Informe o número de estações de trabalho disponíveis por dia:", min_value=1, step=1)
 
