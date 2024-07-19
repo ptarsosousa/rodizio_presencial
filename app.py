@@ -65,31 +65,31 @@ with col1:
 
 units = {}
 
-col1, col2, col3 = st.columns([0.4,0.2,0.4], vertical_alignment="center")
 
 # Carregar dados a partir de uma planilha Excel
-with col1:
 # Entrada manual de unidades e membros
+st.write("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias'.")
+uploaded_file = st.file_uploader("Carregar arquivo Excel", type=["xlsx"])
+if uploaded_file:
+    df = pd.read_excel(uploaded_file)
+    if 'unidade' in df.columns and 'servidor' in df.columns and 'dias' in df.columns:
+        for unit in df['unidade'].unique():
+            unit_people = df[df['unidade'] == unit]
+            units[unit] = [(row['servidor'], row['dias']) for _, row in unit_people.iterrows()]
+        st.write("Unidades e Membros do Excel:")
+        st.write(units)
+    else:
+        st.error("ERRO: O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
+
+col1, col2 = st.columns([0.4,0.6])
+with col1:
     num_unidade = 1
     unit_name = st.text_input("Informe o nome da unidade organizacional (ou deixe em branco para finalizar):")
-with col2:
-    st.title('Ou', )
-with col3:
-    st.write("O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias'.")
-    uploaded_file = st.file_uploader("Carregar arquivo Excel (Formato: servidor, unidade, dias)", type=["xlsx"])
-    if uploaded_file:
-        df = pd.read_excel(uploaded_file)
-        if 'unidade' in df.columns and 'servidor' in df.columns and 'dias' in df.columns:
-            for unit in df['unidade'].unique():
-                unit_people = df[df['unidade'] == unit]
-                units[unit] = [(row['servidor'], row['dias']) for _, row in unit_people.iterrows()]
-            st.write("Unidades e Membros do Excel:")
-            st.write(units)
-        else:
-            st.error("ERRO: O arquivo Excel deve conter as colunas 'unidade', 'servidor' e 'dias por semana'.")
 
 while unit_name:
-    num_people = st.number_input(f"Informe o número de pessoas na {unit_name}:", min_value=1, step=1, key=unit_name)
+    col1, col2 = st.columns([0.4,0.6])
+    with col1:
+        num_people = st.number_input(f"Informe o número de pessoas na {unit_name}:", min_value=1, step=1, key=unit_name)
     names = []
     for i in range(num_people):
         col1, col2 = st.columns([3, 1])
