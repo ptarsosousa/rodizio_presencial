@@ -97,7 +97,7 @@ while unit_name:
         with col1:
             name = st.text_input(f"Me diga o nome da pessoa {i + 1} na {unit_name}:", key=f"{unit_name}_{i}")
         with col2:
-            days = st.number_input(f"Quantos dias da semana o(a) {name} deve trabalhar?", min_value=1, max_value=5, step=1, key=f"{unit_name}_{i}_days")
+            days = st.number_input(f"Quantos dias da semana {name} deve trabalhar?", min_value=1, max_value=5, step=1, key=f"{unit_name}_{i}_days")
         if name:
             names.append((name, days))
     if names:
