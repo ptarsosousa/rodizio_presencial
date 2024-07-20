@@ -10,7 +10,7 @@ def criar_escala_rodizio_linear(df):
         df (pd.DataFrame): DataFrame com os dados dos funcionários e unidades.
 
     Returns:
-        pd.DataFrame: DataFrame com a escala de rodízio.
+        pd.DataFrame: DataFrame com a escala de rodízio em formato de tabela.
     """
 
     # Define o modelo de otimização
@@ -48,26 +48,57 @@ def criar_escala_rodizio_linear(df):
     # Resolve o modelo
     modelo.solve()
 
-    # Cria a escala de rodízio
-    escala = []
+    # Cria a escala de rodízio em formato de tabela
+    escala = {}
+    for dia in dias_da_semana:
+        escala[dia] = []
+        for i in range(df['Estações'].iloc[0]):
+            escala[dia].append(None)  # Inicializa as colunas com None
+
     for funcionario in funcionarios:
         for dia in dias_da_semana:
             if variaveis[funcionario, dia].varValue == 1:
-                escala.append([dia, df.loc[df['Funcionário'] == funcionario, 'Unidade'].iloc[0], funcionario])
+                for i, coluna in enumerate(escala[dia]):
+                    if coluna is None:
+                        escala[dia][i] = funcionario
+                        break
 
-    escala_df = pd.DataFrame(escala, columns=['Dia', 'Unidade', 'Funcionário'])
+    escala_df = pd.DataFrame(escala)
     return escala_df
 
-st.title("Gerenciador de Escala de Rodízio (Modelagem Linear)")
+st.title("Gerenciador de Escala de Rodízio (Modelagem Linear) :flag-br:")
+st.markdown("##Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:##")
 
-# Importação do arquivo Excel
+st.markdown('''
+**Estrutura do Arquivo Excel:**
+
+O arquivo Excel deve conter as seguintes colunas:
+
+* **Unidade:** Nome da unidade organizacional (string)
+* **Funcionário:** Nome do funcionário (string)
+* **Dias:** Número de dias que o funcionário precisa trabalhar por semana (int)
+* **Estações:** Número de estações de trabalho disponíveis (int)
+
+**Exemplo:**
+
+| Unidade | Funcionário | Dias | Estações |
+|---|---|---|---|
+| Desenvolvimento | João | 2 | 3 |
+| Desenvolvimento | Maria | 2 | 3 |
+| Marketing | Ana | 3 | 3 |
+| Marketing | Bruno | 3 | 3 |
+''')
+
 uploaded_file = st.file_uploader("Carregue o arquivo Excel com os dados", type=["xlsx", "xls"])
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 
     # Exibe o DataFrame para verificação
     st.dataframe(df)
-
-    if st.button("Gerar Escala"):
-        escala_df = criar_escala_rodizio_linear(df)
-        st.dataframe(escala_df)
+    if 'Unidade' not in df.columns or 'Funcionário' not in df.columns or 'Dias' not in df.columns or 'Estações' not in df.columns:
+        st.error("ERRO: O arquivo Excel deve conter as colunas 'Unidade', 'Funcionário', 'Dias' e 'Estações'.")
+    else:
+        if st.button("Gerar Escala e correr pro abraço :sparkles:"):
+            escala_df = criar_escala_rodizio_linear(df)
+            st.write(':clap:')
+            st.table(escala_df)
