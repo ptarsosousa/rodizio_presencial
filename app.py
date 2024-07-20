@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
-from pulp import LpProblem, LpMaximize, LpVariable, lpSum, *
+#from pulp import LpProblem, LpMaximize, LpVariable, lpSum, *
+from pulp import *
 from time import time
 
 
