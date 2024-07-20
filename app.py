@@ -40,13 +40,13 @@ def criar_escala_rodizio_linear(df):
         modelo += lpSum(variaveis[funcionario, dia] for funcionario in funcionarios) <= df['Estações'].iloc[0]
 
     # 3. Cada funcionário da mesma unidade não trabalha no mesmo dia
-    for unidade in df['Unidade'].unique():
-        for dia in dias_da_semana:
-            for i in range(len(df)):
-                if df['Unidade'].iloc[i] == unidade:
-                    for j in range(i + 1, len(df)):
-                        if df['Unidade'].iloc[j] == unidade:
-                            modelo += variaveis[df['Funcionário'].iloc[i], dia] + variaveis[df['Funcionário'].iloc[j], dia] <= 1
+    #for unidade in df['Unidade'].unique():
+    #    for dia in dias_da_semana:
+    #        for i in range(len(df)):
+    #            if df['Unidade'].iloc[i] == unidade:
+    #                for j in range(i + 1, len(df)):
+    #                    if df['Unidade'].iloc[j] == unidade:
+    #                        modelo += variaveis[df['Funcionário'].iloc[i], dia] + variaveis[df['Funcionário'].iloc[j], dia] <= 1
 
     # Resolve o modelo
     modelo.solve()
