@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from pulp import LpProblem, LpMaximize, LpVariable, lpSum
+from time import time
 
 
 def criar_escala_rodizio_linear(df):
