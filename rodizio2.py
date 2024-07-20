@@ -67,9 +67,11 @@ def criar_escala_rodizio_linear(df):
     return escala_df
 
 st.title("Gerenciador de Escala de Rodízio (Modelagem Linear) :flag-br:")
-st.markdown("##Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:##")
+st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:")
 
 st.markdown('''
+## 1º Passo - Gere um arquivo Excel
+            
 **Estrutura do Arquivo Excel:**
 
 O arquivo Excel deve conter as seguintes colunas:
@@ -89,6 +91,10 @@ O arquivo Excel deve conter as seguintes colunas:
 | Marketing | Bruno | 3 | 3 |
 ''')
 
+st.markdown('''
+## 2º Passo - Carregue aqui o arquivo Excel que você criou
+''')
+
 uploaded_file = st.file_uploader("Carregue o arquivo Excel com os dados", type=["xlsx", "xls"])
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
@@ -98,6 +104,8 @@ if uploaded_file is not None:
     if 'Unidade' not in df.columns or 'Funcionário' not in df.columns or 'Dias' not in df.columns or 'Estações' not in df.columns:
         st.error("ERRO: O arquivo Excel deve conter as colunas 'Unidade', 'Funcionário', 'Dias' e 'Estações'.")
     else:
+        st.markdown('''
+        ## 3º Passo - Clique no botão abaixo para criar a escala''')
         if st.button("Gerar Escala e correr pro abraço :sparkles:"):
             escala_df = criar_escala_rodizio_linear(df)
             st.write(':clap:')
