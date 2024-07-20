@@ -40,23 +40,20 @@ def criar_escala_rodizio(estacoes, unidades_organizacionais):
     escala_df = pd.DataFrame(escala, columns=['Dia', 'Unidade', 'Funcionário', 'Dias restantes'])
     return escala_df
 
-def main():
-    st.title("Gerenciador de Escala de Rodízio")
+st.title("Gerenciador de Escala de Rodízio")
 
-    estacoes = st.number_input("Número de Estações de Trabalho", min_value=1, value=1)
+estacoes = st.number_input("Número de Estações de Trabalho", min_value=1, value=1)
 
-    unidades_organizacionais = {}
-    num_unidades = st.number_input("Número de Unidades Organizacionais", min_value=1, value=1)
-    for i in range(num_unidades):
-        unidade = st.text_input(f"Nome da Unidade {i+1}")
-        funcionarios = st.text_area(f"Funcionários da Unidade {i+1} (separe por vírgula)", value="João,Maria,José")
-        funcionarios = funcionarios.split(',')
-        dias_trabalho = [int(x) for x in st.text_input(f"Dias de trabalho por funcionário na Unidade {i+1} (separe por vírgula)", value="2,2,2").split(',')]
-        unidades_organizacionais[unidade] = {'funcionarios': funcionarios, 'dias_trabalho': dias_trabalho}
+unidades_organizacionais = {}
+num_unidades = st.number_input("Número de Unidades Organizacionais", min_value=1, value=1)
+for i in range(num_unidades):
+    unidade = st.text_input(f"Nome da Unidade {i+1}")
+    funcionarios = st.text_area(f"Funcionários da Unidade {i+1} (separe por vírgula)", value="João,Maria,José")
+    funcionarios = funcionarios.split(',')
+    dias_trabalho = [int(x) for x in st.text_input(f"Dias de trabalho por funcionário na Unidade {i+1} (separe por vírgula)", value="2,2,2").split(',')]
+    unidades_organizacionais[unidade] = {'funcionarios': funcionarios, 'dias_trabalho': dias_trabalho}
 
-    if st.button("Gerar Escala"):
-        escala_df = criar_escala_rodizio(estacoes, unidades_organizacionais)
-        st.dataframe(escala_df)
+if st.button("Gerar Escala"):
+    escala_df = criar_escala_rodizio(estacoes, unidades_organizacionais)
+    st.dataframe(escala_df)
 
-if __name__ == "__main__":
-    main()
