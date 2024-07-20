@@ -111,3 +111,4 @@ if uploaded_file is not None:
             escala_df = criar_escala_rodizio_linear(df)
             st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
+        
