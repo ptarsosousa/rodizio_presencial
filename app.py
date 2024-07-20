@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from pulp import LpProblem, LpMaximize, LpVariable, lpSum
 
+
 def criar_escala_rodizio_linear(df):
     """
     Cria a escala de rodízio usando modelagem linear.
