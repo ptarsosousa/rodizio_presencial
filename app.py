@@ -69,8 +69,8 @@ def criar_escala_rodizio_linear(df):
     escala_df = pd.DataFrame(escala)
     return escala_df
 
-st.title("Gerenciador de Escala de Rodízio (Modelagem Linear) :flag-br:")
-st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:")
+st.title("Gerador de Escala de Rodízio da Semana (Modelagem Linear) :flag-br:")
+st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera?? :sunglasses:")
 
 st.markdown('''
 ## 1º Passo - Gere um arquivo Excel
