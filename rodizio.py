@@ -1,59 +1,113 @@
 import streamlit as st
 import pandas as pd
+from pulp import LpProblem, LpMaximize, LpVariable, lpSum
 
-def criar_escala_rodizio(estacoes, unidades_organizacionais):
+def criar_escala_rodizio_linear(df):
     """
-    Cria a escala de rodízio usando o método de alocação por turnos.
+    Cria a escala de rodízio usando modelagem linear.
 
     Args:
-        estacoes (int): Número de estações de trabalho disponíveis.
-        unidades_organizacionais (dict): Dicionário com as unidades organizacionais, 
-                                    cada uma contendo uma lista de funcionários e seus dias de trabalho.
+        df (pd.DataFrame): DataFrame com os dados dos funcionários e unidades.
 
     Returns:
-        pd.DataFrame: DataFrame com a escala de rodízio.
+        pd.DataFrame: DataFrame com a escala de rodízio em formato de tabela.
     """
 
-    escala = []
+    # Define o modelo de otimização
+    modelo = LpProblem("Escala_Rodízio", LpMaximize)
+
+    # Define as variáveis de decisão
+    funcionarios = df['Funcionário'].unique()
     dias_da_semana = ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta']
-
-    for unidade, dados in unidades_organizacionais.items():
-        funcionarios = dados['funcionarios']
-        dias_trabalho = dados['dias_trabalho']
-
-        # Cria grupos de funcionários com base no número de estações
-        grupos = [funcionarios[i:i+estacoes] for i in range(0, len(funcionarios), estacoes)]
-
-        # Define a ordem dos grupos para cada dia da semana
-        ordem_grupos = list(range(len(grupos)))
-        for i in range(len(grupos) - 1):
-            ordem_grupos.insert(i + 1, ordem_grupos.pop(0))
-
-        # Cria a escala para cada dia da semana
+    variaveis = {}
+    for funcionario in funcionarios:
         for dia in dias_da_semana:
-            for i, grupo in enumerate(grupos):
-                for j, funcionario in enumerate(grupo):
-                    if dias_trabalho[j] > 0:
-                        escala.append([dia, unidade, funcionario, dias_trabalho[j]])
-                        dias_trabalho[j] -= 1
+            variaveis[funcionario, dia] = LpVariable(f"{funcionario}_{dia}", 0, 1, cat='Binary')
 
-    escala_df = pd.DataFrame(escala, columns=['Dia', 'Unidade', 'Funcionário', 'Dias restantes'])
+    # Define a função objetivo: maximizar o número de funcionários trabalhando
+    modelo += lpSum(variaveis[funcionario, dia] for funcionario in funcionarios for dia in dias_da_semana)
+
+    # Define as restrições:
+    # 1. Cada funcionário trabalha no máximo o número de dias definido
+    for funcionario in funcionarios:
+        modelo += lpSum(variaveis[funcionario, dia] for dia in dias_da_semana) <= df.loc[df['Funcionário'] == funcionario, 'Dias'].iloc[0]
+
+    # 2. Cada dia tem no máximo o número de estações de trabalho
+    for dia in dias_da_semana:
+        modelo += lpSum(variaveis[funcionario, dia] for funcionario in funcionarios) <= df['Estações'].iloc[0]
+
+    # 3. Cada funcionário da mesma unidade não trabalha no mesmo dia
+    for unidade in df['Unidade'].unique():
+        for dia in dias_da_semana:
+            for i in range(len(df)):
+                if df['Unidade'].iloc[i] == unidade:
+                    for j in range(i + 1, len(df)):
+                        if df['Unidade'].iloc[j] == unidade:
+                            modelo += variaveis[df['Funcionário'].iloc[i], dia] + variaveis[df['Funcionário'].iloc[j], dia] <= 1
+
+    # Resolve o modelo
+    modelo.solve()
+
+    # Cria a escala de rodízio em formato de tabela
+    escala = {}
+    for dia in dias_da_semana:
+        escala[dia] = []
+        for i in range(df['Estações'].iloc[0]):
+            escala[dia].append(None)  # Inicializa as colunas com None
+
+    for funcionario in funcionarios:
+        for dia in dias_da_semana:
+            if variaveis[funcionario, dia].varValue == 1:
+                for i, coluna in enumerate(escala[dia]):
+                    if coluna is None:
+                        escala[dia][i] = funcionario
+                        break
+
+    escala_df = pd.DataFrame(escala)
     return escala_df
 
-st.title("Gerenciador de Escala de Rodízio")
+st.title("Gerenciador de Escala de Rodízio (Modelagem Linear) :flag-br:")
+st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera!! :sunglasses:")
 
-estacoes = st.number_input("Número de Estações de Trabalho", min_value=1, value=1)
+st.markdown('''
+## 1º Passo - Gere um arquivo Excel
+            
+**Estrutura do Arquivo Excel:**
 
-unidades_organizacionais = {}
-num_unidades = st.number_input("Número de Unidades Organizacionais", min_value=1, value=1)
-for i in range(num_unidades):
-    unidade = st.text_input(f"Nome da Unidade {i+1}")
-    funcionarios = st.text_area(f"Funcionários da Unidade {i+1} (separe por vírgula)", value="João,Maria,José")
-    funcionarios = funcionarios.split(',')
-    dias_trabalho = [int(x) for x in st.text_input(f"Dias de trabalho por funcionário na Unidade {i+1} (separe por vírgula)", value="2,2,2").split(',')]
-    unidades_organizacionais[unidade] = {'funcionarios': funcionarios, 'dias_trabalho': dias_trabalho}
+O arquivo Excel deve conter as seguintes colunas:
 
-if st.button("Gerar Escala"):
-    escala_df = criar_escala_rodizio(estacoes, unidades_organizacionais)
-    st.dataframe(escala_df)
+* **Unidade:** Nome da unidade organizacional (string)
+* **Funcionário:** Nome do funcionário (string)
+* **Dias:** Número de dias que o funcionário precisa trabalhar por semana (int)
+* **Estações:** Número de estações de trabalho disponíveis (int)
 
+**Exemplo:**
+
+| Unidade | Funcionário | Dias | Estações |
+|---|---|---|---|
+| Desenvolvimento | João | 2 | 3 |
+| Desenvolvimento | Maria | 2 | 3 |
+| Marketing | Ana | 3 | 3 |
+| Marketing | Bruno | 3 | 3 |
+''')
+
+st.markdown('''
+## 2º Passo - Carregue aqui o arquivo Excel que você criou
+''')
+
+uploaded_file = st.file_uploader("Carregue o arquivo Excel com os dados", type=["xlsx", "xls"])
+if uploaded_file is not None:
+    df = pd.read_excel(uploaded_file)
+
+    # Exibe o DataFrame para verificação
+    st.dataframe(df)
+    if 'Unidade' not in df.columns or 'Funcionário' not in df.columns or 'Dias' not in df.columns or 'Estações' not in df.columns:
+        st.error("ERRO: O arquivo Excel deve conter as colunas 'Unidade', 'Funcionário', 'Dias' e 'Estações'.")
+    else:
+        st.markdown('''
+        ## 3º Passo - Clique no botão abaixo para criar a escala''')
+
+        if st.button("Gerar Escala e correr pro abraço :sparkles:"):
+            escala_df = criar_escala_rodizio_linear(df)
+            st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
+            st.table(escala_df)

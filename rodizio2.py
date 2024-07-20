@@ -106,7 +106,8 @@ if uploaded_file is not None:
     else:
         st.markdown('''
         ## 3º Passo - Clique no botão abaixo para criar a escala''')
+
         if st.button("Gerar Escala e correr pro abraço :sparkles:"):
             escala_df = criar_escala_rodizio_linear(df)
-            st.write(':clap:')
+            st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
