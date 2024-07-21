@@ -115,6 +115,7 @@ if uploaded_file is not None:
             escala_df = criar_escala_rodizio_linear(df, opcao1)
             st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
+            st.markdown("### Quer baixar a escala gerada? Então não perca tempo, clique no botão abaixo... :point_down:")
             st.download_button(
                 label="Download Escala (.csv)",
                 data=escala_df.to_csv().encode("utf-8"),
