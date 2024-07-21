@@ -5,7 +5,7 @@ from pulp import *
 from time import time
 
 
-def criar_escala_rodizio_linear(df):
+def criar_escala_rodizio_linear(df, opcao):
     """
     Cria a escala de rodízio usando modelagem linear.
 
@@ -40,13 +40,14 @@ def criar_escala_rodizio_linear(df):
         modelo += lpSum(variaveis[funcionario, dia] for funcionario in funcionarios) <= df['Estações'].iloc[0]
 
     # 3. Cada funcionário da mesma unidade não trabalha no mesmo dia
-    #for unidade in df['Unidade'].unique():
-    #    for dia in dias_da_semana:
-    #        for i in range(len(df)):
-    #            if df['Unidade'].iloc[i] == unidade:
-    #                for j in range(i + 1, len(df)):
-    #                    if df['Unidade'].iloc[j] == unidade:
-    #                        modelo += variaveis[df['Funcionário'].iloc[i], dia] + variaveis[df['Funcionário'].iloc[j], dia] <= 1
+    if opcao:
+        for unidade in df['Unidade'].unique():
+            for dia in dias_da_semana:
+                for i in range(len(df)):
+                    if df['Unidade'].iloc[i] == unidade:
+                        for j in range(i + 1, len(df)):
+                            if df['Unidade'].iloc[j] == unidade:
+                                modelo += variaveis[df['Funcionário'].iloc[i], dia] + variaveis[df['Funcionário'].iloc[j], dia] <= 1
 
     # Resolve o modelo
     modelo.solve()
@@ -109,8 +110,8 @@ if uploaded_file is not None:
     else:
         st.markdown('''
         ## 3º Passo - Clique no botão abaixo para criar a escala''')
-
+        opcao1 = st.checkbox("Impedir que funcionários da mesma unidade trabalhem no mesmo dia")
         if st.button("Gerar Escala e correr pro abraço :sparkles:"):
-            escala_df = criar_escala_rodizio_linear(df)
+            escala_df = criar_escala_rodizio_linear(df, opcao1)
             st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
