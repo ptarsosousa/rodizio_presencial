@@ -115,3 +115,9 @@ if uploaded_file is not None:
             escala_df = criar_escala_rodizio_linear(df, opcao1)
             st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
+            st.download_button(
+                label="Download Escala",
+                data=escala_df,
+                file_name="escala_rodizio.xlsx",
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            )
