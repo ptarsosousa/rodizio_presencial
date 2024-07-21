@@ -116,8 +116,8 @@ if uploaded_file is not None:
             st.markdown('### :clap: :clap: Parabéns!!! Escala gerada com sucesso!!!')
             st.table(escala_df)
             st.download_button(
-                label="Download Escala",
-                data=escala_df,
-                file_name="escala_rodizio.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                label="Download Escala (.csv)",
+                data=escala_df.to_csv().encode("utf-8"),
+                file_name="escala_rodizio.csv",
+                mime="text/csv",
             )
