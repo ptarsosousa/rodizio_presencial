@@ -74,11 +74,11 @@ st.title("Gerador de Escala de Rodízio da Semana (Modelagem Linear) :flag-br:")
 st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera?? :sunglasses:")
 
 st.markdown('''
-## 1º Passo - Gere um arquivo Excel
+## 1º Passo - Gere um arquivo no formato xlsx (Excel)
             
-**Estrutura do Arquivo Excel:**
+**Estrutura do Arquivo:**
 
-O arquivo Excel deve conter as seguintes colunas:
+O arquivo deve conter as seguintes colunas:
 
 * **Unidade:** Nome da unidade organizacional (string)
 * **Funcionário:** Nome do funcionário (string)
@@ -96,10 +96,10 @@ O arquivo Excel deve conter as seguintes colunas:
 ''')
 
 st.markdown('''
-## 2º Passo - Carregue aqui o arquivo Excel que você criou
+## 2º Passo - Carregue aqui o arquivo que você criou (formato xlsx)
 ''')
 
-uploaded_file = st.file_uploader("Carregue o arquivo Excel com os dados", type=["xlsx", "xls"])
+uploaded_file = st.file_uploader("Carregue o arquivo com os dados", type=["xlsx", "xls"])
 if uploaded_file is not None:
     df = pd.read_excel(uploaded_file)
 
