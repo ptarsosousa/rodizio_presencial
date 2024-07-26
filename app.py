@@ -72,7 +72,7 @@ def criar_escala_rodizio_linear(df, opcao):
 
 st.title("Gerador de Escala de Rodízio da Semana (Modelagem Linear) :flag-br:")
 st.subheader("Olá, vamos experimentar esse app e ver se ele nos ajuda a montar o rodízio da galera?? :sunglasses:")
-st.write('Quer saber mais sobre modelagem linear (programação)? Então comece por aqui: ', st.page_link("https://pt.wikipedia.org/wiki/Programa%C3%A7%C3%A3o_linear", label="Programação Linear", icon="🌎"))
+st.write(['Quer saber mais sobre modelagem linear (programação)? Então comece por aqui: ', st.page_link("https://pt.wikipedia.org/wiki/Programa%C3%A7%C3%A3o_linear", label="Programação Linear", icon="🌎")])
 st.page_link
 st.markdown('''
 ## 1º Passo - Gere um arquivo no formato xlsx (Excel)
